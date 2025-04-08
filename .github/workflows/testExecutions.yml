@@ -2,7 +2,7 @@ name: SChool-API_Project_Login_Test_Execution
 
 on:
   schedule:
-    - cron: "0 3 * * *"  # Автоматично стартиране всеки ден в 03:00 UTC
+    - cron: "0 3 * * *"
   workflow_dispatch:
 
 jobs:
@@ -20,20 +20,14 @@ jobs:
           dotnet-version: '8.0'
 
       - name: Restore dependencies
-        run: |
-          cd .\SchoolAPIProject\
-          dotnet restore
+        run: dotnet restore ./SchoolAPIProject/SchoolAPIProject.sln
 
       - name: Build project
-        run: |
-          cd .\SchoolAPIProject\
-          dotnet build --no-restore --configuration Release
+        run: dotnet build ./SchoolAPIProject/SchoolAPIProject.sln --no-restore --configuration Release
 
       - name: Run Reqnroll tests
-        run:  |
-          cd .\SchoolAPIProject\
-          dotnet test --no-build --configuration Release --filter Category=login || true
-      
+        run: dotnet test ./SchoolAPIProject/SchoolAPIProject.sln --no-build --configuration Release --filter Category=login || true
+
       - name: Find Report File
         id: find_report
         run: |
@@ -41,10 +35,9 @@ jobs:
           echo "REPORT_NAME=$($report.Name)" | Out-File -FilePath $env:GITHUB_ENV -Append
         shell: pwsh
 
-      # ✅ Качване на репорта в GitHub Artifacts (запазва се 7 дни)
       - name: Upload Test Report as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: test-report
           path: ./SchoolAPIProject/SchoolAPIProject/bin/Release/net8.0/TestReport_*.html
-          retention-days: 7  # Запазва репорта за 7 дни
+          retention-days: 7
