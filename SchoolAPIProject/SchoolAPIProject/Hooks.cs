@@ -4,7 +4,7 @@ using OpenQA.Selenium.Chrome;
 using Reqnroll;
 using System.Collections;
 
-namespace BackEndAutomation
+namespace SchoolAPIProject
 {
     [Binding]
     public sealed class Hooks
